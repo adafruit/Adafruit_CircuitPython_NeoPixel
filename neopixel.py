@@ -34,4 +34,4 @@ class NeoPixel:
             self[i] = color
 
     def write(self):
-        neopixel_write(self.pin, self.buf, True)
+        neopixel_write(self.pin, self.buf)
