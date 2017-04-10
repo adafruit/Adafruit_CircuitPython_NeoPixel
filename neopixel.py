@@ -1,13 +1,13 @@
 # NeoPixel driver for MicroPython on ESP8266
 # MIT license; Copyright (c) 2016 Damien P. George
 
-import nativeio
+import digitalio
 from neopixel_write import neopixel_write
 
 class NeoPixel:
     ORDER = (1, 0, 2, 3)
     def __init__(self, pin, n, bpp=3):
-        self.pin = nativeio.DigitalInOut(pin)
+        self.pin = digitalio.DigitalInOut(pin)
         self.n = n
         self.bpp = bpp
         self.buf = bytearray(n * bpp)
