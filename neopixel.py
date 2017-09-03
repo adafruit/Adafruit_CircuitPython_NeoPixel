@@ -71,7 +71,7 @@ class NeoPixel:
             time.sleep(2)
     """
     ORDER = (1, 0, 2, 3)
-    def __init__(self, pin, n, bpp=3, brightness=1.0, auto_write=False):
+    def __init__(self, pin, n, bpp=3, brightness=1.0, auto_write=True):
         self.pin = digitalio.DigitalInOut(pin)
         self.pin.direction = digitalio.Direction.OUTPUT
         self.n = n

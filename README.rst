@@ -49,20 +49,21 @@ This example demonstrates the library with the single built-in NeoPixel on the
 
     pixels = neopixel.NeoPixel(board.NEOPIXEL, 1)
     pixels[0] = (10, 0, 0)
-    pixels.show()
 
 This example demonstrates the library with the ten built-in NeoPixels on the
 `Circuit Playground Express <https://www.adafruit.com/product/3333>`_. It turns
-on ``auto_write`` so that all pixels are updated at once.
+off ``auto_write`` so that all pixels are updated at once when the ``show``
+method is called.
 
 .. code-block:: python
 
     import board
     import neopixel
 
-    pixels = neopixel.NeoPixel(board.NEOPIXEL, 10, auto_write=True)
+    pixels = neopixel.NeoPixel(board.NEOPIXEL, 10, auto_write=False)
     pixels[0] = (10, 0, 0)
     pixels[9] = (0, 10, 0)
+    pixels.show()
 
 Contributing
 ============
