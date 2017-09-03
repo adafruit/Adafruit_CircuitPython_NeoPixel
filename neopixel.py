@@ -91,7 +91,7 @@ class NeoPixel:
         self.pin.deinit()
 
     def __repr__(self):
-        return "[" + ", ".join(["0x%06x" % (x,) for x in self]) + "]"
+        return "[" + ", ".join([str(x) for x in self]) + "]"
 
     def _set_item(self, index, value):
         offset = index * self.bpp
@@ -142,14 +142,16 @@ class NeoPixel:
         if isinstance(index, slice):
             out = []
             for in_i in range(*index.indices(len(self.buf) // self.bpp)):
-                out.append(self[in_i])
+                out.append(tuple(self.buf[in_i * self.bpp + self.ORDER[i]]
+                           for i in range(self.bpp)))
             return out
         offset = index * self.bpp
         if self.bpp == 4:
             w = self.buf[offset + 3]
             if w != 0:
                 return w << 16 | w << 8 | w
-        return self.buf[offset + 1] << 16 | self.buf[offset] << 8 | self.buf[offset + 2]
+        return tuple(self.buf[offset + self.ORDER[i]]
+                     for i in range(self.bpp))
 
     def __len__(self):
         return len(self.buf) // self.bpp

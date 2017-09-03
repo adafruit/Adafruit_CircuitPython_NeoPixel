@@ -15,15 +15,15 @@ supercharged version of the original MicroPython driver. Its now more like a
 normal Python sequence and features slice support, ``repr`` and ``len`` support.
 
 Colors are now stored as ints by default rather than tuples. However, you can
-still use the tuple syntax to set values. For example, ``0x100000`` is equivalent
-to ``(0x10, 0, 0)``.
+still use the tuple syntax to set values. For example, ``0x100000`` is
+equivalent to ``(0x10, 0, 0)``. To make it easier to read and control each
+color component, readback values are expressed as tuples.
 
 .. note:: This API represents the brightness of the white pixel when present by
   setting the RGB channels to identical values. For example, full white is
   0xffffff but is actually (0, 0, 0, 0xff) in the tuple syntax. Setting a pixel
   value with an int will use the white pixel if the RGB channels are identical.
-  For full, independent, control of each color component use the tuple syntax
-  and ignore the readback value.
+  For full, independent, control of each color component use the tuple syntax.
 
 Dependencies
 =============
@@ -51,8 +51,9 @@ This example demonstrates the library with the single built-in NeoPixel on the
     pixels[0] = (10, 0, 0)
 
 This example demonstrates the library with the ten built-in NeoPixels on the
-`Circuit Playground Express <https://www.adafruit.com/product/3333>`_. It turns off
-``auto_write`` so that all pixels are updated at once.
+`Circuit Playground Express <https://www.adafruit.com/product/3333>`_. It turns
+off ``auto_write`` so that all pixels are updated at once when the ``show``
+method is called.
 
 .. code-block:: python
 
