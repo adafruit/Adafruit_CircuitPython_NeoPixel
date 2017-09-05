@@ -80,15 +80,18 @@ class NeoPixel:
         self.brightness = brightness
         self.auto_write = auto_write
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exception_type, exception_value, traceback):
-        # Blank out the neopixels.
+    def deinit(self):
+        """Blank out the NeoPixels and release the pin."""
         for i in range(len(self.buf)):
             self.buf[i] = 0
         neopixel_write(self.pin, self.buf)
         self.pin.deinit()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        self.deinit()
 
     def __repr__(self):
         return "[" + ", ".join([str(x) for x in self]) + "]"
