@@ -1,6 +1,6 @@
 
-Introduction
-============
+Adafruit CircuitPython NeoPixel
+===============================
 
 .. image:: https://readthedocs.org/projects/adafruit-circuitpython-neopixel/badge/?version=latest
     :target: https://circuitpython.readthedocs.io/projects/neopixel/en/latest/
@@ -10,20 +10,24 @@ Introduction
     :target: https://gitter.im/adafruit/circuitpython?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
     :alt: Gitter
 
+.. image :: https://img.shields.io/discord/327254708534116352.svg
+    :target: https://adafru.it/discord
+    :alt: Discord
+
 Higher level NeoPixel driver that presents the strip as a sequence. This is a
 supercharged version of the original MicroPython driver. Its now more like a
 normal Python sequence and features slice support, ``repr`` and ``len`` support.
 
-Colors are now stored as ints by default rather than tuples. However, you can
-still use the tuple syntax to set values. For example, ``0x100000`` is
-equivalent to ``(0x10, 0, 0)``. To make it easier to read and control each
-color component, readback values are expressed as tuples.
+Colors are stored as tuples by default. However, you can also use int hex syntax
+to set values similar to colors on the web. For example, ``0x100000`` (``#100000``
+on the web) is equivalent to ``(0x10, 0, 0)``.
 
-.. note:: This API represents the brightness of the white pixel when present by
-  setting the RGB channels to identical values. For example, full white is
-  0xffffff but is actually (0, 0, 0, 0xff) in the tuple syntax. Setting a pixel
-  value with an int will use the white pixel if the RGB channels are identical.
-  For full, independent, control of each color component use the tuple syntax.
+.. note:: The int hex API represents the brightness of the white pixel when
+  present by setting the RGB channels to identical values. For example, full
+  white is 0xffffff but is actually (0, 0, 0, 0xff) in the tuple syntax. Setting
+  a pixel value with an int will use the white pixel if the RGB channels are
+  identical. For full, independent, control of each color component use the
+  tuple syntax.
 
 Dependencies
 =============
