@@ -94,6 +94,10 @@ class NeoPixel:
         return "[" + ", ".join([str(x) for x in self]) + "]"
 
     def _set_item(self, index, value):
+        if index < 0:
+            index += len(self)
+        if index >= self.n or index < 0:
+            raise IndexError
         offset = index * self.bpp
         r = 0
         g = 0
@@ -145,19 +149,16 @@ class NeoPixel:
                 out.append(tuple(self.buf[in_i * self.bpp + self.ORDER[i]]
                            for i in range(self.bpp)))
             return out
+        if index < 0:
+            index += len(self)
+        if index >= self.n or index < 0:
+            raise IndexError
         offset = index * self.bpp
-        if self.bpp == 4:
-            w = self.buf[offset + 3]
-            if w != 0:
-                return w << 16 | w << 8 | w
         return tuple(self.buf[offset + self.ORDER[i]]
                      for i in range(self.bpp))
 
     def __len__(self):
         return len(self.buf) // self.bpp
-
-    def __len__(self):
-        return self.n
 
     @property
     def brightness(self):
