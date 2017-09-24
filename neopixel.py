@@ -106,7 +106,7 @@ class NeoPixel:
         g = 0
         b = 0
         w = 0
-        if type(value) == tuple and len(value) == self.bpp:
+        if ((type(value) == tuple) or (type(value) == list)) and len(value) == self.bpp:
             if self.bpp == 3:
                 r, g, b = value
             else:
