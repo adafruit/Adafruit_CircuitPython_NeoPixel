@@ -106,12 +106,7 @@ class NeoPixel:
         g = 0
         b = 0
         w = 0
-        if type(value) == tuple and len(value) == self.bpp:
-            if self.bpp == 3:
-                r, g, b = value
-            else:
-                r, g, b, w = value
-        elif type(value) == int:
+        if type(value) == int:
             r = value >> 16
             g = (value >> 8) & 0xff
             b = value & 0xff
@@ -123,6 +118,11 @@ class NeoPixel:
                 r = 0
                 g = 0
                 b = 0
+        elif len(value) == self.bpp:
+            if self.bpp == 3:
+                r, g, b = value
+            else:
+                r, g, b, w = value
         self.buf[offset + self.ORDER[0]] = r
         self.buf[offset + self.ORDER[1]] = g
         self.buf[offset + self.ORDER[2]] = b
