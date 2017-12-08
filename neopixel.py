@@ -28,9 +28,13 @@
 * Author(s): Damien P. George & Scott Shawcroft
 """
 
-import digitalio
 import math
+
+import digitalio
 from neopixel_write import neopixel_write
+
+__version__ = "0.0.0-auto.0"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel.git"
 
 class NeoPixel:
     """
@@ -39,8 +43,10 @@ class NeoPixel:
     :param ~microcontroller.Pin pin: The pin to output neopixel data on.
     :param int n: The number of neopixels in the chain
     :param int bpp: Bytes per pixel. 3 for RGB and 4 for RGBW pixels.
-    :param float brightness: Brightness of the pixels between 0.0 and 1.0 where 1.0 is full brightness
-    :param bool auto_write: True if the neopixels should immediately change when set. If False, `show` must be called explicitly.
+    :param float brightness: Brightness of the pixels between 0.0 and 1.0 where 1.0 is full
+      brightness
+    :param bool auto_write: True if the neopixels should immediately change when set. If False,
+      `show` must be called explicitly.
 
     Example for Circuit Playground Express:
 
@@ -71,7 +77,7 @@ class NeoPixel:
             time.sleep(2)
     """
     ORDER = (1, 0, 2, 3)
-    def __init__(self, pin, n, bpp=3, brightness=1.0, auto_write=True):
+    def __init__(self, pin, n, *, bpp=3, brightness=1.0, auto_write=True):
         self.pin = digitalio.DigitalInOut(pin)
         self.pin.direction = digitalio.Direction.OUTPUT
         self.n = n
@@ -106,7 +112,7 @@ class NeoPixel:
         g = 0
         b = 0
         w = 0
-        if type(value) == int:
+        if isinstance(value, int):
             r = value >> 16
             g = (value >> 8) & 0xff
             b = value & 0xff
@@ -150,7 +156,7 @@ class NeoPixel:
             out = []
             for in_i in range(*index.indices(len(self.buf) // self.bpp)):
                 out.append(tuple(self.buf[in_i * self.bpp + self.ORDER[i]]
-                           for i in range(self.bpp)))
+                                 for i in range(self.bpp)))
             return out
         if index < 0:
             index += len(self)
@@ -170,13 +176,14 @@ class NeoPixel:
 
     @brightness.setter
     def brightness(self, brightness):
+        # pylint: disable=attribute-defined-outside-init
         self._brightness = min(max(brightness, 0.0), 1.0)
 
     def fill(self, color):
         """Colors all pixels the given ***color***."""
         auto_write = self.auto_write
         self.auto_write = False
-        for i in range(len(self)):
+        for i, _ in enumerate(self):
             self[i] = color
         if auto_write:
             self.show()
