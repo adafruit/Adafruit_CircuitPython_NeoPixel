@@ -21,4 +21,10 @@ deploy:
   on:
     tags: true
 
-script: circuitpython-build-bundles --filename_prefix adafruit-circuitpython-neopixel --library_location .
+install:
+  - pip install pylint circuitpython-travis-build-tools
+
+script:
+  - pylint neopixel.py
+  - ([[ ! -d "examples" ]] || pylint --disable=missing-docstring,invalid-name examples/*.py)
+  - circuitpython-build-bundles --filename_prefix adafruit-circuitpython-neopixel --library_location .

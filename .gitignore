@@ -1,2 +1,5 @@
 _build
 __pycache__
+.env
+build*
+bundles
