@@ -46,15 +46,15 @@ def rainbow_cycle(wait):
         time.sleep(wait)
 
 while True:
-    strip.fill((255, 0, 0))
+    strip.fill(format_tuple(255, 0, 0))
     strip.show()
     time.sleep(1)
 
-    strip.fill((0, 255, 0))
+    strip.fill(format_tuple(0, 255, 0))
     strip.show()
     time.sleep(1)
 
-    strip.fill((0, 0, 255))
+    strip.fill(format_tuple(0, 0, 255))
     strip.show()
     time.sleep(1)
 
