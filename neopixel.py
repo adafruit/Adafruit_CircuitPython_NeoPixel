@@ -83,6 +83,9 @@ class NeoPixel:
         self.n = n
         self.bpp = bpp
         self.buf = bytearray(n * bpp)
+        # Set auto_write to False temporarily so brightness setter does _not_
+        # call show() while in __init__.
+        self.auto_write = False
         self.brightness = brightness
         self.auto_write = auto_write
 
@@ -178,6 +181,8 @@ class NeoPixel:
     def brightness(self, brightness):
         # pylint: disable=attribute-defined-outside-init
         self._brightness = min(max(brightness, 0.0), 1.0)
+        if self.auto_write:
+            self.show()
 
     def fill(self, color):
         """Colors all pixels the given ***color***."""
