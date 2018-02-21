@@ -37,18 +37,10 @@ __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel.git"
 
 # Pixel color order constants
-RGB = 0
-GRB = 1
-RGBW = 2
-GRBW = 3
-
-# Pixel color order
-PIXEL_ORDER = {
-    RGB:  (0, 1, 2),
-    GRB:  (1, 0, 2),
-    RGBW: (0, 1, 2, 3),
-    GRBW: (1, 0, 2, 3),
-}
+RGB = (0, 1, 2)
+GRB = (1, 0, 2)
+RGBW = (0, 1, 2, 3)
+GRBW = (1, 0, 2, 3)
 
 class NeoPixel:
     """
@@ -97,10 +89,10 @@ class NeoPixel:
         self.n = n
         #self.bpp = bpp
         if pixel_order is None:
-            self.ORDER = PIXEL_ORDER[GRBW]
+            self.ORDER = GRBW
             self.bpp = bpp
         else:
-            self.ORDER = PIXEL_ORDER[pixel_order]
+            self.ORDER = pixel_order
             self.bpp = len(self.ORDER)
         self.buf = bytearray(n * bpp)
         # Set auto_write to False temporarily so brightness setter does _not_
