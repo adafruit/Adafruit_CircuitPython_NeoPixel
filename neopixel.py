@@ -94,7 +94,7 @@ class NeoPixel:
         else:
             self.ORDER = pixel_order
             self.bpp = len(self.ORDER)
-        self.buf = bytearray(n * bpp)
+        self.buf = bytearray(self.n * self.bpp)
         # Set auto_write to False temporarily so brightness setter does _not_
         # call show() while in __init__.
         self.auto_write = False
