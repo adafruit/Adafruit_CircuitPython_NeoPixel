@@ -32,7 +32,7 @@ Table of Contents
     :caption: Other Links
 
     Download <https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel/releases/latest>
-    Adafruit NeoPixel Überguide <https://learn.adafruit.com/adafruit-neopixel-uberguide>
+    Adafruit NeoPixel Uberguide <https://learn.adafruit.com/adafruit-neopixel-uberguide>
     CircuitPython Reference Documentation <https://circuitpython.readthedocs.io>
     CircuitPython Support Forum <https://forums.adafruit.com/viewforum.php?f=60>
     Discord Chat <https://adafru.it/discord>
