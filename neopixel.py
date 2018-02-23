@@ -38,9 +38,13 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel.git"
 
 # Pixel color order constants
 RGB = (0, 1, 2)
+"""Red Green Blue"""
 GRB = (1, 0, 2)
+"""Green Red Blue"""
 RGBW = (0, 1, 2, 3)
+"""Red Green Blue White"""
 GRBW = (1, 0, 2, 3)
+"""Green Red Blue White"""
 
 class NeoPixel:
     """
@@ -53,6 +57,7 @@ class NeoPixel:
       brightness
     :param bool auto_write: True if the neopixels should immediately change when set. If False,
       `show` must be called explicitly.
+    :param tuple pixel_order: Set the pixel color channel order. GRBW is set by default.
 
     Example for Circuit Playground Express:
 
@@ -82,18 +87,16 @@ class NeoPixel:
             pixels[::2] = [RED] * (len(pixels) // 2)
             time.sleep(2)
     """
-    #ORDER = (1, 0, 2, 3)
     def __init__(self, pin, n, *, bpp=3, brightness=1.0, auto_write=True, pixel_order=None):
         self.pin = digitalio.DigitalInOut(pin)
         self.pin.direction = digitalio.Direction.OUTPUT
         self.n = n
-        #self.bpp = bpp
         if pixel_order is None:
-            self.ORDER = GRBW
+            self.order = GRBW
             self.bpp = bpp
         else:
-            self.ORDER = pixel_order
-            self.bpp = len(self.ORDER)
+            self.order = pixel_order
+            self.bpp = len(self.order)
         self.buf = bytearray(self.n * self.bpp)
         # Set auto_write to False temporarily so brightness setter does _not_
         # call show() while in __init__.
@@ -144,11 +147,11 @@ class NeoPixel:
                 r, g, b = value
             else:
                 r, g, b, w = value
-        self.buf[offset + self.ORDER[0]] = r
-        self.buf[offset + self.ORDER[1]] = g
-        self.buf[offset + self.ORDER[2]] = b
+        self.buf[offset + self.order[0]] = r
+        self.buf[offset + self.order[1]] = g
+        self.buf[offset + self.order[2]] = b
         if self.bpp == 4:
-            self.buf[offset + self.ORDER[3]] = w
+            self.buf[offset + self.order[3]] = w
 
     def __setitem__(self, index, val):
         if isinstance(index, slice):
@@ -170,7 +173,7 @@ class NeoPixel:
         if isinstance(index, slice):
             out = []
             for in_i in range(*index.indices(len(self.buf) // self.bpp)):
-                out.append(tuple(self.buf[in_i * self.bpp + self.ORDER[i]]
+                out.append(tuple(self.buf[in_i * self.bpp + self.order[i]]
                                  for i in range(self.bpp)))
             return out
         if index < 0:
@@ -178,7 +181,7 @@ class NeoPixel:
         if index >= self.n or index < 0:
             raise IndexError
         offset = index * self.bpp
-        return tuple(self.buf[offset + self.ORDER[i]]
+        return tuple(self.buf[offset + self.order[i]]
                      for i in range(self.bpp))
 
     def __len__(self):
