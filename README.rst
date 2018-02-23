@@ -69,6 +69,19 @@ method is called.
     pixels[9] = (0, 10, 0)
     pixels.show()
 
+This example demonstrates using a single NeoPixel tied to a GPIO pin and with
+a ``pixel_order`` to specify the color channel order. Note that ``bpp`` does not
+need to be specified as it is computed from the supplied ``pixel_order``.
+
+.. code-block:: python
+
+    import board
+    import neopixel
+
+    pixel = neopixel.NeoPixel(board.D0, 1, pixel_order=neopixel.RGBW)
+    pixel[0] = (30, 0, 20, 10)
+
+
 Contributing
 ============
 
