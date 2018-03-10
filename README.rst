@@ -6,13 +6,13 @@ Adafruit CircuitPython NeoPixel
     :target: https://circuitpython.readthedocs.io/projects/neopixel/en/latest/
     :alt: Documentation Status
 
-.. image :: https://badges.gitter.im/adafruit/circuitpython.svg
-    :target: https://gitter.im/adafruit/circuitpython?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
-    :alt: Gitter
-
 .. image :: https://img.shields.io/discord/327254708534116352.svg
     :target: https://adafru.it/discord
     :alt: Discord
+
+.. image:: https://travis-ci.org/adafruit/Adafruit_CircuitPython_NeoPixel.svg?branch=master
+    :target: https://travis-ci.org/adafruit/Adafruit_CircuitPython_NeoPixel
+    :alt: Build Status
 
 Higher level NeoPixel driver that presents the strip as a sequence. This is a
 supercharged version of the original MicroPython driver. Its now more like a
