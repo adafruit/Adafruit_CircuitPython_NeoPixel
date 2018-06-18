@@ -107,7 +107,6 @@ class NeoPixel:
         self.auto_write = False
         self.auto_write = auto_write
         if PixelBuf:
-            print("PB INIT")
             self.buf = PixelBuf(self.n, bytearray(self.n * self.bpp), 
                                 bpp=self.bpp, brightness=brightness,
                                 rawbuf=bytearray(self.n * self.bpp))
@@ -121,7 +120,10 @@ class NeoPixel:
         """Blank out the NeoPixels and release the pin."""
         for i in range(len(self.buf)):
             self.buf[i] = 0
-        neopixel_write(self.pin, self.buf)
+        if PixelBuf:
+            neopixel_write(self.pin, self.buf.buf)
+        else:
+            neopixel_write(self.pin, self.buf)
         self.pin.deinit()
 
     def __enter__(self):
