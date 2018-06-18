@@ -32,6 +32,11 @@ import math
 
 import digitalio
 from neopixel_write import neopixel_write
+try:
+    from pixelbuf import PixelBuf
+except:
+    PixelBuf = None
+
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel.git"
@@ -97,12 +102,20 @@ class NeoPixel:
         else:
             self.order = pixel_order
             self.bpp = len(self.order)
-        self.buf = bytearray(self.n * self.bpp)
         # Set auto_write to False temporarily so brightness setter does _not_
         # call show() while in __init__.
         self.auto_write = False
-        self.brightness = brightness
         self.auto_write = auto_write
+        if PixelBuf:
+            print("PB INIT")
+            self.buf = PixelBuf(self.n, bytearray(self.n * self.bpp), 
+                                bpp=self.bpp, brightness=brightness,
+                                rawbuf=bytearray(self.n * self.bpp))
+            NeoPixel.__setitem__ = NeoPixel.__setitem_pb__
+            NeoPixel.__getitem__ = NeoPixel.__getitem_pb__
+        else:
+            self.buf = bytearray(self.n * self.bpp)
+            self.brightness = brightness
 
     def deinit(self):
         """Blank out the NeoPixels and release the pin."""
@@ -169,6 +182,15 @@ class NeoPixel:
         if self.auto_write:
             self.show()
 
+    def __setitem_pb__(self, index, val):
+        if isinstance(index, slice):
+            self.buf[index.start:index.stop:index.step] = val
+        else:
+            self.buf[index] = val
+
+        if self.auto_write:
+            self.show()
+
     def __getitem__(self, index):
         if isinstance(index, slice):
             out = []
@@ -184,18 +206,29 @@ class NeoPixel:
         return tuple(self.buf[offset + self.order[i]]
                      for i in range(self.bpp))
 
+    def __getitem_pb__(self, index):
+        if isinstance(index, slice):
+            return self.buf[index.start:index.stop:index.step]
+        else:
+            return self.buf[index]
+
     def __len__(self):
         return len(self.buf) // self.bpp
 
     @property
     def brightness(self):
         """Overall brightness of the pixel"""
+        if PixelBuf:
+            return self.buf.brightness
         return self._brightness
 
     @brightness.setter
     def brightness(self, brightness):
         # pylint: disable=attribute-defined-outside-init
-        self._brightness = min(max(brightness, 0.0), 1.0)
+        if PixelBuf:
+            self.buf.brightness = brightness
+        else:
+            self._brightness = min(max(brightness, 0.0), 1.0)
         if self.auto_write:
             self.show()
 
@@ -221,7 +254,9 @@ class NeoPixel:
 
         The colors may or may not be showing after this function returns because
         it may be done asynchronously."""
-        if self.brightness > 0.99:
+        if PixelBuf:
+            neopixel_write(self.pin, self.buf.buf)
+        elif self.brightness > 0.99:
             neopixel_write(self.pin, self.buf)
         else:
             neopixel_write(self.pin, bytearray([int(i * self.brightness) for i in self.buf]))
