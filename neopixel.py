@@ -32,23 +32,20 @@ import math
 
 import digitalio
 from neopixel_write import neopixel_write
-try:
-    from pixelbuf import PixelBuf
-except:
-    PixelBuf = None
+from pixelbuf import PixelBuf
 
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel.git"
 
 # Pixel color order constants
-RGB = (0, 1, 2)
+RGB = PixelBuf.RGB
 """Red Green Blue"""
-GRB = (1, 0, 2)
+GRB = PixelBuf.GRB
 """Green Red Blue"""
-RGBW = (0, 1, 2, 3)
+RGBW = PixelBuf.RGB
 """Red Green Blue White"""
-GRBW = (1, 0, 2, 3)
+GRBW = PixelBuf.GRB
 """Green Red Blue White"""
 
 class NeoPixel:
@@ -96,34 +93,18 @@ class NeoPixel:
         self.pin = digitalio.DigitalInOut(pin)
         self.pin.direction = digitalio.Direction.OUTPUT
         self.n = n
-        if pixel_order is None:
-            self.order = GRBW
-            self.bpp = bpp
-        else:
-            self.order = pixel_order
-            self.bpp = len(self.order)
-        # Set auto_write to False temporarily so brightness setter does _not_
-        # call show() while in __init__.
-        self.auto_write = False
         self.auto_write = auto_write
-        if PixelBuf:
-            self.buf = PixelBuf(self.n, bytearray(self.n * self.bpp), 
-                                bpp=self.bpp, brightness=brightness,
-                                rawbuf=bytearray(self.n * self.bpp))
-            NeoPixel.__setitem__ = NeoPixel.__setitem_pb__
-            NeoPixel.__getitem__ = NeoPixel.__getitem_pb__
-        else:
-            self.buf = bytearray(self.n * self.bpp)
-            self.brightness = brightness
+        self.bpp = bpp
+        self.buf = PixelBuf(self.n, bytearray(self.n * bpp), 
+                            bpp=self.bpp, brightness=brightness,
+                            rawbuf=bytearray(self.n * bpp),
+                            byteorder=pixel_order or PixelBuf.BGR)
 
     def deinit(self):
         """Blank out the NeoPixels and release the pin."""
         for i in range(len(self.buf)):
             self.buf[i] = 0
-        if PixelBuf:
-            neopixel_write(self.pin, self.buf.buf)
-        else:
-            neopixel_write(self.pin, self.buf)
+        neopixel_write(self.pin, self.buf.buf)
         self.pin.deinit()
 
     def __enter__(self):
@@ -135,56 +116,7 @@ class NeoPixel:
     def __repr__(self):
         return "[" + ", ".join([str(x) for x in self]) + "]"
 
-    def _set_item(self, index, value):
-        if index < 0:
-            index += len(self)
-        if index >= self.n or index < 0:
-            raise IndexError
-        offset = index * self.bpp
-        r = 0
-        g = 0
-        b = 0
-        w = 0
-        if isinstance(value, int):
-            r = value >> 16
-            g = (value >> 8) & 0xff
-            b = value & 0xff
-            w = 0
-            # If all components are the same and we have a white pixel then use it
-            # instead of the individual components.
-            if self.bpp == 4 and r == g and g == b:
-                w = r
-                r = 0
-                g = 0
-                b = 0
-        elif len(value) == self.bpp:
-            if self.bpp == 3:
-                r, g, b = value
-            else:
-                r, g, b, w = value
-        self.buf[offset + self.order[0]] = r
-        self.buf[offset + self.order[1]] = g
-        self.buf[offset + self.order[2]] = b
-        if self.bpp == 4:
-            self.buf[offset + self.order[3]] = w
-
     def __setitem__(self, index, val):
-        if isinstance(index, slice):
-            start, stop, step = index.indices(len(self.buf) // self.bpp)
-            length = stop - start
-            if step != 0:
-                length = math.ceil(length / step)
-            if len(val) != length:
-                raise ValueError("Slice and input sequence size do not match.")
-            for val_i, in_i in enumerate(range(start, stop, step)):
-                self._set_item(in_i, val[val_i])
-        else:
-            self._set_item(index, val)
-
-        if self.auto_write:
-            self.show()
-
-    def __setitem_pb__(self, index, val):
         if isinstance(index, slice):
             self.buf[index.start:index.stop:index.step] = val
         else:
@@ -194,21 +126,6 @@ class NeoPixel:
             self.show()
 
     def __getitem__(self, index):
-        if isinstance(index, slice):
-            out = []
-            for in_i in range(*index.indices(len(self.buf) // self.bpp)):
-                out.append(tuple(self.buf[in_i * self.bpp + self.order[i]]
-                                 for i in range(self.bpp)))
-            return out
-        if index < 0:
-            index += len(self)
-        if index >= self.n or index < 0:
-            raise IndexError
-        offset = index * self.bpp
-        return tuple(self.buf[offset + self.order[i]]
-                     for i in range(self.bpp))
-
-    def __getitem_pb__(self, index):
         if isinstance(index, slice):
             return self.buf[index.start:index.stop:index.step]
         else:
@@ -220,17 +137,12 @@ class NeoPixel:
     @property
     def brightness(self):
         """Overall brightness of the pixel"""
-        if PixelBuf:
-            return self.buf.brightness
-        return self._brightness
+        return self.buf.brightness
 
     @brightness.setter
     def brightness(self, brightness):
         # pylint: disable=attribute-defined-outside-init
-        if PixelBuf:
-            self.buf.brightness = brightness
-        else:
-            self._brightness = min(max(brightness, 0.0), 1.0)
+        self.buf.brightness = brightness
         if self.auto_write:
             self.show()
 
@@ -256,9 +168,4 @@ class NeoPixel:
 
         The colors may or may not be showing after this function returns because
         it may be done asynchronously."""
-        if PixelBuf:
-            neopixel_write(self.pin, self.buf.buf)
-        elif self.brightness > 0.99:
-            neopixel_write(self.pin, self.buf)
-        else:
-            neopixel_write(self.pin, bytearray([int(i * self.brightness) for i in self.buf]))
+        neopixel_write(self.pin, self.buf.buf)
