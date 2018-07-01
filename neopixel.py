@@ -32,21 +32,12 @@ import math
 
 import digitalio
 from neopixel_write import neopixel_write
-from pixelbuf import PixelBuf
+from pixelbuf import PixelBuf, RGB, GRB, RGBW, GRBW
 
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel.git"
 
-# Pixel color order constants
-RGB = PixelBuf.RGB
-"""Red Green Blue"""
-GRB = PixelBuf.GRB
-"""Green Red Blue"""
-RGBW = PixelBuf.RGB
-"""Red Green Blue White"""
-GRBW = PixelBuf.GRB
-"""Green Red Blue White"""
 
 class NeoPixel:
     """
@@ -95,10 +86,11 @@ class NeoPixel:
         self.n = n
         self.auto_write = auto_write
         self.bpp = bpp
+        # TODO switch to correct byteorder if bpp specified but not pixel_order
         self.buf = PixelBuf(self.n, bytearray(self.n * bpp), 
                             bpp=self.bpp, brightness=brightness,
                             rawbuf=bytearray(self.n * bpp),
-                            byteorder=pixel_order or PixelBuf.BGR)
+                            byteorder=pixel_order or GRB)
 
     def deinit(self):
         """Blank out the NeoPixels and release the pin."""
