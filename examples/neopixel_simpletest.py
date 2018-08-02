@@ -8,6 +8,7 @@ import neopixel
 # On CircuitPlayground Express -> Board.NEOPIXEL
 # Otherwise choose an open pin connected to the Data In of the NeoPixel strip,
 # such as board.D1
+# pylint: disable=no-member
 pixpin = board.NEOPIXEL
 
 # The number of pixels in the strip
