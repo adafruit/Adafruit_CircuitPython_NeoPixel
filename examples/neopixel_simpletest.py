@@ -8,6 +8,7 @@ import neopixel
 # On CircuitPlayground Express -> Board.NEOPIXEL
 # Otherwise choose an open pin connected to the Data In of the NeoPixel strip,
 # such as board.D1
+# pylint: disable=no-member
 pixpin = board.NEOPIXEL
 
 # The number of pixels in the strip
@@ -30,10 +31,9 @@ def wheel(pos):
         return format_tuple(0, 0, 0)
     if pos < 85:
         return format_tuple(int(pos * 3), int(255 - (pos*3)), 0)
-    elif pos < 170:
+    if pos < 170:
         pos -= 85
         return format_tuple(int(255 - pos*3), 0, int(pos*3))
-    #else:
     pos -= 170
     return format_tuple(0, int(pos*3), int(255 - pos*3))
 
