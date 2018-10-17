@@ -14,28 +14,30 @@ num_pixels = 10
 # For RGBW NeoPixels, simply change the ORDER to RGBW or GRBW.
 ORDER = neopixel.GRB
 
-pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.3, auto_write=False,
+pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.2, auto_write=False,
                            pixel_order=ORDER)
-
-
-def format_tuple(r, g, b):
-    if ORDER == neopixel.RGB or ORDER == neopixel.GRB:
-        return r, g, b
-    return r, g, b, 0
 
 
 def wheel(pos):
     # Input a value 0 to 255 to get a color value.
     # The colours are a transition r - g - b - back to r.
     if pos < 0 or pos > 255:
-        return format_tuple(0, 0, 0)
-    if pos < 85:
-        return format_tuple(int(pos * 3), int(255 - (pos*3)), 0)
-    if pos < 170:
+        r = g = b = 0
+    elif pos < 85:
+        r = int(pos * 3)
+        g = int(255 - pos*3)
+        b = 0
+    elif pos < 170:
         pos -= 85
-        return format_tuple(int(255 - pos*3), 0, int(pos*3))
-    pos -= 170
-    return format_tuple(0, int(pos*3), int(255 - pos*3))
+        r = int(255 - pos*3)
+        g = 0
+        b = int(pos*3)
+    else:
+        pos -= 170
+        r = 0
+        g = int(pos*3)
+        b = int(255 - pos*3)
+    return (r, g, b) if ORDER == neopixel.RGB or ORDER == neopixel.GRB else (r, g, b, 0)
 
 
 def rainbow_cycle(wait):
@@ -48,15 +50,24 @@ def rainbow_cycle(wait):
 
 
 while True:
-    pixels.fill(format_tuple(255, 0, 0))
+    # Comment this line out if you have RGBW/GRBW NeoPixels
+    pixels.fill((255, 0, 0))
+    # Uncomment this line if you have RGBW/GRBW NeoPixels
+    # pixels.fill((255, 0, 0, 0))
     pixels.show()
     time.sleep(1)
 
-    pixels.fill(format_tuple(0, 255, 0))
+    # Comment this line out if you have RGBW/GRBW NeoPixels
+    pixels.fill((0, 255, 0))
+    # Uncomment this line if you have RGBW/GRBW NeoPixels
+    # pixels.fill((0, 255, 0, 0))
     pixels.show()
     time.sleep(1)
 
-    pixels.fill(format_tuple(0, 0, 255))
+    # Comment this line out if you have RGBW/GRBW NeoPixels
+    pixels.fill((0, 0, 255))
+    # Uncomment this line if you have RGBW/GRBW NeoPixels
+    # pixels.fill((0, 0, 255, 0))
     pixels.show()
     time.sleep(1)
 
