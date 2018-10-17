@@ -10,14 +10,16 @@ pixel_pin = board.NEOPIXEL
 # The number of NeoPixels
 num_pixels = 10
 
-# The number of colors in each pixel: 3 for RGB, 4 for RGBW (RGB plus white)
-BPP = 3
+# The order of the pixel colors - RGB or GRB. Some NeoPixels have red and green reversed!
+# For RGBW NeoPixels, simply change the ORDER to RGBW or GRBW.
+ORDER = neopixel.GRB
 
-pixels = neopixel.NeoPixel(pixel_pin, num_pixels, bpp=BPP, brightness=0.3, auto_write=False)
+pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.3, auto_write=False,
+                           pixel_order=ORDER)
 
 
 def format_tuple(r, g, b):
-    if BPP == 3:
+    if ORDER == neopixel.RGB or ORDER == neopixel.GRB:
         return r, g, b
     return r, g, b, 0
 
