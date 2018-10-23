@@ -5,6 +5,7 @@ import neopixel
 
 
 # Choose an open pin connected to the Data In of the NeoPixel strip, i.e. board.D18
+# NeoPixels must be connected to GPIO10, GPIO12, GPIO18 or GPIO21 to work.
 pixel_pin = board.D18
 
 # The number of NeoPixels
