@@ -147,6 +147,9 @@ class NeoPixel:
                 r, g, b = value
             else:
                 r, g, b, w = value
+        else:
+            raise ValueError("Color tuple size does not match pixel_order.")
+
         self.buf[offset + self.order[0]] = r
         self.buf[offset + self.order[1]] = g
         self.buf[offset + self.order[2]] = b
