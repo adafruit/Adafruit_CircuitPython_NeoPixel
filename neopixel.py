@@ -131,6 +131,8 @@ class NeoPixel:
         b = 0
         w = 0
         if isinstance(value, int):
+            if value>>24:
+                raise ValueError("only bits 0->23 valid for integer input")
             r = value >> 16
             g = (value >> 8) & 0xff
             b = value & 0xff
@@ -142,9 +144,9 @@ class NeoPixel:
                 r = 0
                 g = 0
                 b = 0
-        elif len(value) == self.bpp:
-            if self.bpp == 3:
-                r, g, b = value
+        elif (len(value) == self.bpp) or ((len(value) == 3) and (self.bpp == 4)):
+            if len(value) == 3:
+                r, g, b = value[0:3]
             else:
                 r, g, b, w = value
         else:
