@@ -145,10 +145,7 @@ class NeoPixel:
                 g = 0
                 b = 0
         elif (len(value) == self.bpp) or ((len(value) == 3) and (self.bpp == 4)):
-            if len(value) == 3:
-                r, g, b = value[0:3]
-            else:
-                r, g, b, w = value
+            r, g, b, w = value if len(value) == 4 else value+(0,)
         else:
             raise ValueError("Color tuple size does not match pixel_order.")
 
