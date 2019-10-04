@@ -34,7 +34,7 @@ try:
     # imports needed for main NeoPixel class
     import digitalio
     from neopixel_write import neopixel_write
-except ModuleNotFoundError:
+except NotImplementedError:
     # silently accept this, can still use NeoPixel SPI class
     pass
 
@@ -301,9 +301,9 @@ class NeoPixel_SPI(NeoPixel):
         with self._spi as spi:
             # write out special byte sequence surrounded by RESET
             # leading RESET needed for cases where MOSI rests HI
-            spi.write(self.RESET + self._transmogrify(self.buf) + self.RESET)
+            spi.write(self.RESET + self._transmogrify() + self.RESET)
 
-    def _transmogrify(self, buf):
+    def _transmogrify(self):
         """Turn every BIT of buf into a special BYTE pattern."""
         out_buf = bytearray()
         for byte in self.buf:
