@@ -34,7 +34,7 @@ try:
     # imports needed for main NeoPixel class
     import digitalio
     from neopixel_write import neopixel_write
-except:
+except ModuleNotFoundError:
     # silently accept this, can still use NeoPixel SPI class
     pass
 
@@ -259,7 +259,7 @@ class NeoPixel_SPI(NeoPixel):
         pixels = neopixel.NeoPixel_SPI(board.SPI(), 10)
         pixels.fill(0xff0000)
     """
-    #pylint: disable=invalid-name
+    #pylint: disable=invalid-name, super-init-not-called
 
     FREQ = 6400000  # 800kHz * 8, actual may be different
     TRST = 80e-6    # Reset code low level time
@@ -267,10 +267,10 @@ class NeoPixel_SPI(NeoPixel):
     def __init__(self, spi, n, *, bpp=3, brightness=1.0, auto_write=True, pixel_order=None):
         from adafruit_bus_device.spi_device import SPIDevice
         self._spi = SPIDevice(spi, baudrate=self.FREQ)
-        with self._spi as spi:
+        with self._spi as spibus:
             try:
                 # get actual SPI frequency
-                freq = spi.frequency
+                freq = spibus.frequency
             except AttributeError:
                 # use nominal
                 freq = self.FREQ
