@@ -283,6 +283,7 @@ class NeoPixel_SPI(NeoPixel):
             self.order = pixel_order
             self.bpp = len(self.order)
         self.buf = bytearray(self.n * self.bpp)
+        self.spibuf = bytearray(8*len(self.buf))
         # Set auto_write to False temporarily so brightness setter does _not_
         # call show() while in __init__.
         self.auto_write = False
@@ -298,19 +299,20 @@ class NeoPixel_SPI(NeoPixel):
     def show(self):
         """Shows the new colors on the pixels themselves if they haven't already
         been autowritten."""
+        self._transmogrify()
         with self._spi as spi:
             # write out special byte sequence surrounded by RESET
             # leading RESET needed for cases where MOSI rests HI
-            spi.write(self.RESET + self._transmogrify() + self.RESET)
+            spi.write(self.RESET + self.spibuf + self.RESET)
 
     def _transmogrify(self):
         """Turn every BIT of buf into a special BYTE pattern."""
-        out_buf = bytearray()
+        k = 0
         for byte in self.buf:
             # MSB first
             for i in range(7, -1, -1):
                 if byte >> i & 0x01:
-                    out_buf.append(0b11110000) # A NeoPixel 1 bit
+                    self.spibuf[k] = 0b11110000 # A NeoPixel 1 bit
                 else:
-                    out_buf.append(0b11000000) # A NeoPixel 0 bit
-        return out_buf
+                    self.spibuf[k] = 0b11000000 # A NeoPixel 0 bit
+                k += 1
