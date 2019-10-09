@@ -309,6 +309,7 @@ class NeoPixel_SPI(NeoPixel):
         """Turn every BIT of buf into a special BYTE pattern."""
         k = 0
         for byte in self.buf:
+            byte = int(byte * self.brightness)
             # MSB first
             for i in range(7, -1, -1):
                 if byte >> i & 0x01:
