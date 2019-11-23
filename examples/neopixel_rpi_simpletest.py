@@ -1,17 +1,15 @@
+# Simple test for NeoPixels on Raspberry Pi
 import time
 import board
 import neopixel
 
 
-# On CircuitPlayground Express, and boards with built in status NeoPixel -> board.NEOPIXEL
-# Otherwise choose an open pin connected to the Data In of the NeoPixel strip, i.e. board.D1
-pixel_pin = board.NEOPIXEL
-
-# On a Raspberry pi, use this instead, not all pins are supported
-#pixel_pin = board.D18
+# Choose an open pin connected to the Data In of the NeoPixel strip, i.e. board.D18
+# NeoPixels must be connected to D10, D12, D18 or D21 to work.
+pixel_pin = board.D18
 
 # The number of NeoPixels
-num_pixels = 10
+num_pixels = 30
 
 # The order of the pixel colors - RGB or GRB. Some NeoPixels have red and green reversed!
 # For RGBW NeoPixels, simply change the ORDER to RGBW or GRBW.

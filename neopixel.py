@@ -30,8 +30,13 @@
 
 import math
 
-import digitalio
-from neopixel_write import neopixel_write
+try:
+    # imports needed for main NeoPixel class
+    import digitalio
+    from neopixel_write import neopixel_write
+except NotImplementedError:
+    # silently accept this, can still use NeoPixel SPI class
+    pass
 try:
     import _pixelbuf
 except ImportError:
