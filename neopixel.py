@@ -32,14 +32,31 @@ import math
 
 import digitalio
 from neopixel_write import neopixel_write
-from pixelbuf import PixelBuf, RGB, GRB, RGBW, GRBW
+try:
+    import _pixelbuf
+except ImportError:
+    import pypixelbuf as _pixelbuf
 
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel.git"
 
 
-class NeoPixel:
+# Pixel color order constants
+RGB = 'rgb'
+"""Red Green Blue"""
+GRB = 'grb'
+"""Green Red Blue"""
+RGBW = 'rgbw'
+"""Red Green Blue White"""
+GRBW = 'grbw'
+"""Green Red Blue White"""
+
+
+class NeoPixel(_pixelbuf.PixelBuf):
+
+    bpp = None
+    n = 0
     """
     A sequence of neopixels.
 
@@ -50,7 +67,7 @@ class NeoPixel:
       brightness
     :param bool auto_write: True if the neopixels should immediately change when set. If False,
       `show` must be called explicitly.
-    :param tuple pixel_order: Set the pixel color channel order. GRBW is set by default.
+    :param str: Set the pixel color channel order. GRBW is set by default.
 
     Example for Circuit Playground Express:
 
@@ -83,20 +100,30 @@ class NeoPixel:
     def __init__(self, pin, n, *, bpp=3, brightness=1.0, auto_write=True, pixel_order=None):
         self.pin = digitalio.DigitalInOut(pin)
         self.pin.direction = digitalio.Direction.OUTPUT
-        self.n = n
-        self.auto_write = auto_write
         self.bpp = bpp
-        # TODO switch to correct byteorder if bpp specified but not pixel_order
-        self.buf = PixelBuf(self.n, bytearray(self.n * bpp), 
-                            bpp=self.bpp, brightness=brightness,
-                            rawbuf=bytearray(self.n * bpp),
-                            byteorder=pixel_order or GRB)
+        self.n = n
+        if not pixel_order:
+            pixel_order = 'grb' if bpp == 3 else 'grbw'
+        else: 
+            self.bpp = bpp = len(pixel_order)
+            # Backwards compatibility with tuples
+            if isinstance(pixel_order, tuple):
+                order_chars = 'rgbw'
+                order = []
+                for char_no, order in enumerate(pixel_order):
+                    order[pixel_order] = order_chars[char_no]
+                pixel_order = ''.join(order)
+
+        super().__init__(n, bytearray(self.n * bpp),
+                         brightness=brightness,
+                         rawbuf=bytearray(self.n * bpp),
+                         byteorder=pixel_order,
+                         auto_write=auto_write)
 
     def deinit(self):
         """Blank out the NeoPixels and release the pin."""
-        for i in range(len(self.buf)):
-            self.buf[i] = 0
-        neopixel_write(self.pin, self.buf.buf)
+        self.fill(0)
+        self.show()
         self.pin.deinit()
 
     def __enter__(self):
@@ -107,36 +134,6 @@ class NeoPixel:
 
     def __repr__(self):
         return "[" + ", ".join([str(x) for x in self]) + "]"
-
-    def __setitem__(self, index, val):
-        if isinstance(index, slice):
-            self.buf[index.start:index.stop:index.step] = val
-        else:
-            self.buf[index] = val
-
-        if self.auto_write:
-            self.show()
-
-    def __getitem__(self, index):
-        if isinstance(index, slice):
-            return self.buf[index.start:index.stop:index.step]
-        else:
-            return self.buf[index]
-
-    def __len__(self):
-        return len(self.buf) // self.bpp
-
-    @property
-    def brightness(self):
-        """Overall brightness of the pixel"""
-        return self.buf.brightness
-
-    @brightness.setter
-    def brightness(self, brightness):
-        # pylint: disable=attribute-defined-outside-init
-        self.buf.brightness = brightness
-        if self.auto_write:
-            self.show()
 
     def fill(self, color):
         """Colors all pixels the given ***color***."""
@@ -160,4 +157,4 @@ class NeoPixel:
 
         The colors may or may not be showing after this function returns because
         it may be done asynchronously."""
-        neopixel_write(self.pin, self.buf.buf)
+        neopixel_write(self.pin, self.buf)
