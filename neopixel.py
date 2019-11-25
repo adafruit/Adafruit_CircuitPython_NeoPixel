@@ -92,9 +92,13 @@ class NeoPixel:
             pixels[::2] = [RED] * (len(pixels) // 2)
             time.sleep(2)
     """
-    def __init__(self, pin, n, *, bpp=3, brightness=1.0, auto_write=True, pixel_order=None):
-        self.pin = digitalio.DigitalInOut(pin)
-        self.pin.direction = digitalio.Direction.OUTPUT
+    def __init__(self, pin, n, *, bpp=3, brightness=1.0, auto_write=True, pixel_order=None, mock=False):
+        self.mock = mock
+        if not mock:
+            self.pin = digitalio.DigitalInOut(pin)
+            self.pin.direction = digitalio.Direction.OUTPUT
+        else:
+            self.pin = pin
         self.n = n
         if pixel_order is None:
             self.order = GRBW
@@ -113,8 +117,9 @@ class NeoPixel:
         """Blank out the NeoPixels and release the pin."""
         for i in range(len(self.buf)):
             self.buf[i] = 0
-        neopixel_write(self.pin, self.buf)
-        self.pin.deinit()
+        if not self.mock:
+            neopixel_write(self.pin, self.buf)
+            self.pin.deinit()
 
     def __enter__(self):
         return self
@@ -231,6 +236,8 @@ class NeoPixel:
 
         The colors may or may not be showing after this function returns because
         it may be done asynchronously."""
+        if self.mock:
+            return
         if self.brightness > 0.99:
             neopixel_write(self.pin, self.buf)
         else:
