@@ -103,6 +103,11 @@ class NeoPixel(_pixelbuf.PixelBuf):
             time.sleep(2)
     """
     def __init__(self, pin, n, *, bpp=3, brightness=1.0, auto_write=True, pixel_order=None):
+        self._configure(n, bpp, brightness, auto_write, pixel_order)
+        self.pin = digitalio.DigitalInOut(pin)
+        self.pin.direction = digitalio.Direction.OUTPUT
+
+    def _configure(self, n, bpp=3, brightness=1.0, auto_write=True, pixel_order=None):
         self.bpp = bpp
         self.n = n
         if not pixel_order:
@@ -121,9 +126,6 @@ class NeoPixel(_pixelbuf.PixelBuf):
                          rawbuf=bytearray(self.n * bpp),
                          byteorder=pixel_order,
                          auto_write=auto_write)
-
-        self.pin = digitalio.DigitalInOut(pin)
-        self.pin.direction = digitalio.Direction.OUTPUT
 
     def deinit(self):
         """Blank out the NeoPixels and release the pin."""
@@ -153,3 +155,69 @@ class NeoPixel(_pixelbuf.PixelBuf):
         The colors may or may not be showing after this function returns because
         it may be done asynchronously."""
         neopixel_write(self.pin, self.buf)
+
+
+class NeoPixel_SPI(NeoPixel):
+    """
+    A sequence of neopixels.
+
+    :param ~busio.SPI spi: The SPI bus to output neopixel data on.
+    :param int n: The number of neopixels in the chain
+    :param int bpp: Bytes per pixel. 3 for RGB and 4 for RGBW pixels.
+    :param float brightness: Brightness of the pixels between 0.0 and 1.0 where 1.0 is full
+      brightness
+    :param bool auto_write: True if the neopixels should immediately change when set. If False,
+      `show` must be called explicitly.
+    :param tuple pixel_order: Set the pixel color channel order. GRBW is set by default.
+
+    Example:
+
+    .. code-block:: python
+
+        import board
+        import neopixel
+
+        pixels = neopixel.NeoPixel_SPI(board.SPI(), 10)
+        pixels.fill(0xff0000)
+    """
+    #pylint: disable=invalid-name, super-init-not-called
+
+    FREQ = 6400000  # 800kHz * 8, actual may be different
+    TRST = 80e-6    # Reset code low level time
+
+    def __init__(self, spi, n, *, bpp=3, brightness=1.0, auto_write=True, pixel_order=None):
+        self._configure(n, bpp, brightness, auto_write, pixel_order)
+
+        from adafruit_bus_device.spi_device import SPIDevice
+        self._spi = SPIDevice(spi, baudrate=self.FREQ)
+        with self._spi as spibus:
+            try:
+                # get actual SPI frequency
+                freq = spibus.frequency
+            except AttributeError:
+                # use nominal
+                freq = self.FREQ
+        self.RESET = bytes([0]*round(freq*self.TRST))
+        self.spibuf = bytearray(8*len(self.buf))
+
+    def show(self):
+        """Shows the new colors on the pixels themselves if they haven't already
+        been autowritten."""
+        self._transmogrify()
+        with self._spi as spi:
+            # write out special byte sequence surrounded by RESET
+            # leading RESET needed for cases where MOSI rests HI
+            spi.write(self.RESET + self.spibuf + self.RESET)
+
+    def _transmogrify(self):
+        """Turn every BIT of buf into a special BYTE pattern."""
+        k = 0
+        for byte in self.buf:
+            byte = int(byte * self.brightness)
+            # MSB first
+            for i in range(7, -1, -1):
+                if byte >> i & 0x01:
+                    self.spibuf[k] = 0b11110000 # A NeoPixel 1 bit
+                else:
+                    self.spibuf[k] = 0b11000000 # A NeoPixel 0 bit
+                k += 1
