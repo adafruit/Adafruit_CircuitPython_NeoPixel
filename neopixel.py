@@ -48,13 +48,13 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel.git"
 
 
 # Pixel color order constants
-RGB = 'rgb'
+RGB = 'RGB'
 """Red Green Blue"""
-GRB = 'grb'
+GRB = 'GRB'
 """Green Red Blue"""
-RGBW = 'rgbw'
+RGBW = 'RGBW'
 """Red Green Blue White"""
-GRBW = 'grbw'
+GRBW = 'GRBW'
 """Green Red Blue White"""
 
 
@@ -103,17 +103,14 @@ class NeoPixel(_pixelbuf.PixelBuf):
             time.sleep(2)
     """
     def __init__(self, pin, n, *, bpp=3, brightness=1.0, auto_write=True, pixel_order=None):
-        self.pin = digitalio.DigitalInOut(pin)
-        self.pin.direction = digitalio.Direction.OUTPUT
         self.bpp = bpp
         self.n = n
         if not pixel_order:
-            pixel_order = 'grb' if bpp == 3 else 'grbw'
+            pixel_order = GRB if bpp == 3 else GRBW
         else: 
             self.bpp = bpp = len(pixel_order)
-            # Backwards compatibility with tuples
             if isinstance(pixel_order, tuple):
-                order_chars = 'rgbw'
+                order_chars = RGBW
                 order = []
                 for char_no, order in enumerate(pixel_order):
                     order[pixel_order] = order_chars[char_no]
@@ -124,6 +121,9 @@ class NeoPixel(_pixelbuf.PixelBuf):
                          rawbuf=bytearray(self.n * bpp),
                          byteorder=pixel_order,
                          auto_write=auto_write)
+
+        self.pin = digitalio.DigitalInOut(pin)
+        self.pin.direction = digitalio.Direction.OUTPUT
 
     def deinit(self):
         """Blank out the NeoPixels and release the pin."""
@@ -139,16 +139,6 @@ class NeoPixel(_pixelbuf.PixelBuf):
 
     def __repr__(self):
         return "[" + ", ".join([str(x) for x in self]) + "]"
-
-    def fill(self, color):
-        """Colors all pixels the given ***color***."""
-        auto_write = self.auto_write
-        self.auto_write = False
-        for i, _ in enumerate(self):
-            self[i] = color
-        if auto_write:
-            self.show()
-        self.auto_write = auto_write
 
     def write(self):
         """.. deprecated: 1.0.0
