@@ -2,6 +2,8 @@
 #
 # Copyright (c) 2016 Damien P. George
 # Copyright (c) 2017 Scott Shawcroft for Adafruit Industries
+# Copyright (c) 2019 Carter Nelson
+# Copyright (c) 2019 Roy Hooper
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -25,10 +27,8 @@
 `neopixel` - NeoPixel strip driver
 ====================================================
 
-* Author(s): Damien P. George & Scott Shawcroft
+* Author(s): Damien P. George, Scott Shawcroft, Carter Nelson, Roy Hooper
 """
-
-import math
 
 try:
     # imports needed for main NeoPixel class
@@ -59,9 +59,6 @@ GRBW = 'GRBW'
 
 
 class NeoPixel(_pixelbuf.PixelBuf):
-
-    bpp = None
-    n = 0
     """
     A sequence of neopixels.
 
@@ -102,17 +99,18 @@ class NeoPixel(_pixelbuf.PixelBuf):
             pixels[::2] = [RED] * (len(pixels) // 2)
             time.sleep(2)
     """
+
     def __init__(self, pin, n, *, bpp=3, brightness=1.0, auto_write=True, pixel_order=None):
+        self.bpp = bpp
+        self.n = n
         self._configure(n, bpp, brightness, auto_write, pixel_order)
         self.pin = digitalio.DigitalInOut(pin)
         self.pin.direction = digitalio.Direction.OUTPUT
 
-    def _configure(self, n, bpp=3, brightness=1.0, auto_write=True, pixel_order=None):
-        self.bpp = bpp
-        self.n = n
+    def _configure(self, n, bpp=3, brightness=1.0, auto_write=True, pixel_order=None):  # pylint: disable=too-many-arguments
         if not pixel_order:
             pixel_order = GRB if bpp == 3 else GRBW
-        else: 
+        else:
             self.bpp = bpp = len(pixel_order)
             if isinstance(pixel_order, tuple):
                 order_chars = RGBW
@@ -159,7 +157,7 @@ class NeoPixel(_pixelbuf.PixelBuf):
 
 class NeoPixel_SPI(NeoPixel):
     """
-    A sequence of neopixels.
+    A sequence of neopixels using SPI.
 
     :param ~busio.SPI spi: The SPI bus to output neopixel data on.
     :param int n: The number of neopixels in the chain
@@ -180,7 +178,7 @@ class NeoPixel_SPI(NeoPixel):
         pixels = neopixel.NeoPixel_SPI(board.SPI(), 10)
         pixels.fill(0xff0000)
     """
-    #pylint: disable=invalid-name, super-init-not-called
+    # pylint: disable=invalid-name, super-init-not-called, import-outside-toplevel
 
     FREQ = 6400000  # 800kHz * 8, actual may be different
     TRST = 80e-6    # Reset code low level time
