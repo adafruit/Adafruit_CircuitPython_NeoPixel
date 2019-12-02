@@ -99,6 +99,8 @@ class NeoPixel(_pixelbuf.PixelBuf):
             pixels[::2] = [RED] * (len(pixels) // 2)
             time.sleep(2)
     """
+    bpp = None
+    n = 0
 
     def __init__(self, pin, n, *, bpp=3, brightness=1.0, auto_write=True, pixel_order=None):
         self.bpp = bpp
