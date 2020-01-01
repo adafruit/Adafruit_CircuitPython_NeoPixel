@@ -151,3 +151,6 @@ class NeoPixel(_pixelbuf.PixelBuf):
         it may be done asynchronously."""
         neopixel_write(self.pin, self.buf)
 
+    def fill(self, color):
+        """Colors all pixels the given ***color***."""
+        _pixelbuf.fill(self, color)
