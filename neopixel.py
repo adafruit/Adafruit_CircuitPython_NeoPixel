@@ -35,7 +35,7 @@ from neopixel_write import neopixel_write
 try:
     import _pixelbuf
 except ImportError:
-    import pypixelbuf as _pixelbuf
+    import adafruit_pypixelbuf as _pixelbuf
 
 
 __version__ = "0.0.0-auto.0"
