@@ -100,11 +100,7 @@ class NeoPixel(_pixelbuf.PixelBuf):
     def __init__(self, pin, n, *, bpp=3, brightness=1.0, auto_write=True, pixel_order=None):
         self.bpp = bpp
         self.n = n
-        self._configure(n, bpp, brightness, auto_write, pixel_order)
-        self.pin = digitalio.DigitalInOut(pin)
-        self.pin.direction = digitalio.Direction.OUTPUT
 
-    def _configure(self, n, bpp=3, brightness=1.0, auto_write=True, pixel_order=None):  # pylint: disable=too-many-arguments
         if not pixel_order:
             pixel_order = GRB if bpp == 3 else GRBW
         else:
@@ -121,6 +117,9 @@ class NeoPixel(_pixelbuf.PixelBuf):
                          rawbuf=bytearray(self.n * bpp),
                          byteorder=pixel_order,
                          auto_write=auto_write)
+
+        self.pin = digitalio.DigitalInOut(pin)
+        self.pin.direction = digitalio.Direction.OUTPUT
 
     def deinit(self):
         """Blank out the NeoPixels and release the pin."""
