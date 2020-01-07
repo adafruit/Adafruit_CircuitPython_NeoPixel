@@ -1,0 +1,32 @@
+dist: trusty
+sudo: false
+language: python
+python:
+- '3.6'
+cache:
+  pip: true
+deploy:
+- provider: releases
+  api_key: "$GITHUB_TOKEN"
+  file_glob: true
+  file: "$TRAVIS_BUILD_DIR/bundles/*"
+  skip_cleanup: true
+  overwrite: true
+  on:
+    tags: true
+- provider: pypi
+  user: adafruit-travis
+  on:
+    tags: true
+  password:
+    secure: c8pmry40i83I1bhC6FqDztcB6YUgzOR6tVUwkEczcrOKD6Vu3bKrk1tDIBqiybuOB4Zi76AYn0NGfphqjAyfu0DL+4Sy28f/l8UyWsA61JbftqHA/HAguI872ggPltOf8Qxz7/T4oCpt2hAO3PTvESltlS0tLjWnoSdgs6zz/TSSe5tH97Tm5TfZ4NBVAbcUapqNbWNojZWevH7H/X4BZNoUwdjEOfMdMyJpRm4wjRxLA3okFkC3yPD5z/8TZoOOVicL4cvEIDmLPixd7PmN0Yn4KOWyWjTyVJTD4lcQxYgl+zj8N99eDbosyuBltaU/wzFcz4vuDgVIlS+pBp7TxA9WeE5vt0XwEr0CHx97+0vCO0RzZ3zY3KXUvo9TyIFCMJIOxftpGtTw0ZmnUi3Y2PsJChnQGmLIYGa5KR4e1R3jRlc12xH3+4KzXOfUgRImUfLQIHxuOswiZpT70cbmJSQe+kRhyGvsDr8KsCtbcD7ukACvpEu1QAcNrjkOsESKDcH6vmdJxNDaYR5vqSdQXiSrWBlwqrC662XuXfgqfRkJ/Y/7vWd5m+KFlzfvZV/sMDiqf2T8R6KhNnVa85kXB3Sl5w2vlMSSBXr6xJ4Qp9jlqjcdAuzw6rDm/09J1MDwUGt8ltkGHmP8t6Xjg4tNERCSzGYLLhOc9rT4jAAnhsY=
+install:
+- pip install -r requirements.txt
+- pip install pylint circuitpython-build-tools Sphinx sphinx-rtd-theme
+- pip install --force-reinstall pylint==1.9.2
+script:
+- pylint neopixel.py
+- ([[ ! -d "examples" ]] || pylint --disable=missing-docstring,invalid-name examples/*.py)
+- circuitpython-build-bundles --filename_prefix adafruit-circuitpython-neopixel --library_location
+  .
+- cd docs && sphinx-build -E -W -b html . _build/html && cd ..
