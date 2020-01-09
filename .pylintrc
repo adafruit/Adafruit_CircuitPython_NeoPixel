@@ -119,8 +119,7 @@ spelling-store-unknown-words=no
 [MISCELLANEOUS]
 
 # List of note tags to take in consideration, separated by a comma.
-# notes=FIXME,XXX,TODO
-notes=FIXME,XXX
+notes=FIXME,XXX,TODO
 
 
 [TYPECHECK]
