@@ -10,8 +10,8 @@ Adafruit CircuitPython NeoPixel
     :target: https://adafru.it/discord
     :alt: Discord
 
-.. image:: https://travis-ci.com/adafruit/Adafruit_CircuitPython_NeoPixel.svg?branch=master
-    :target: https://travis-ci.com/adafruit/Adafruit_CircuitPython_NeoPixel
+.. image:: https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel/workflows/Build%20CI/badge.svg
+    :target: https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel/actions/
     :alt: Build Status
 
 Higher level NeoPixel driver that presents the strip as a sequence. This is a
