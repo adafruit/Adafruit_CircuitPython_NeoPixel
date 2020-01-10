@@ -65,6 +65,8 @@ class NeoPixel(_pixelbuf.PixelBuf):
     :param bool auto_write: True if the neopixels should immediately change when set. If False,
       `show` must be called explicitly.
     :param str: Set the pixel color channel order. GRBW is set by default.
+    :param bytearray pixel_buffer: (optional) bytearray of pixels before brightness adjustment
+    :param bytearray output_buffer: (optional) bytearray of pixels after brightness adjustment
 
     Example for Circuit Playground Express:
 
@@ -93,13 +95,23 @@ class NeoPixel(_pixelbuf.PixelBuf):
         with neopixel.NeoPixel(NEOPIXEL, 10) as pixels:
             pixels[::2] = [RED] * (len(pixels) // 2)
             time.sleep(2)
+
     """
     bpp = None
     n = 0
 
-    def __init__(self, pin, n, *, bpp=3, brightness=1.0, auto_write=True, pixel_order=None):
+    def __init__(self, pin, n, *, bpp=3, brightness=1.0, auto_write=True, pixel_order=None,
+                 pixel_buffer=None, output_buffer=None):
         self.bpp = bpp
         self.n = n
+
+        num_bytes = n * bpp
+        if pixel_buffer and len(pixel_buffer) < num_bytes:
+            raise ValueError("Pixel buffer too small")
+        if output_buffer and len(output_buffer) < num_bytes:
+            raise ValueError("Output buffer too small")
+        self._buf = pixel_buffer or bytearray(num_bytes)
+        self._brightness_adjusted_buf = output_buffer or bytearray(num_bytes)
 
         if not pixel_order:
             pixel_order = GRB if bpp == 3 else GRBW
@@ -112,9 +124,9 @@ class NeoPixel(_pixelbuf.PixelBuf):
                     order[pixel_order] = order_chars[char_no]
                 pixel_order = ''.join(order)
 
-        super().__init__(n, bytearray(self.n * bpp),
+        super().__init__(n, self._brightness_adjusted_buf,
                          brightness=brightness,
-                         rawbuf=bytearray(self.n * bpp),
+                         rawbuf=self._buf,
                          byteorder=pixel_order,
                          auto_write=auto_write)
 
@@ -153,3 +165,7 @@ class NeoPixel(_pixelbuf.PixelBuf):
     def fill(self, color):
         """Colors all pixels the given ***color***."""
         _pixelbuf.fill(self, color)
+
+    def redraw(self):
+        """Refresh all calculated pixels from the raw pixel buffer"""
+        self[:] = self[:]
