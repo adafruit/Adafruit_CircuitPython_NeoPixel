@@ -169,4 +169,4 @@ class NeoPixel(_pixelbuf.PixelBuf):
         Update the unadjusted buffer.
         """
         self._rawbuf[:] = value[:]
-        self.brightness = self.brightness
+        self.brightness = self.brightness  # pylint: disable=attribute-defined-outside-init
