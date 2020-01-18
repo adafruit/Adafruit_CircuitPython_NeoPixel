@@ -112,9 +112,11 @@ class NeoPixel(_pixelbuf.PixelBuf):
                     order[pixel_order] = order_chars[char_no]
                 pixel_order = ''.join(order)
 
-        super().__init__(n, bytearray(self.n * bpp),
+        self._buf = bytearray(self.n * bpp)
+        self._rawbuf = bytearray(self.n * bpp)
+        super().__init__(n, self._buf,
                          brightness=brightness,
-                         rawbuf=bytearray(self.n * bpp),
+                         rawbuf=_rawbuf,
                          byteorder=pixel_order,
                          auto_write=auto_write)
 
@@ -148,8 +150,23 @@ class NeoPixel(_pixelbuf.PixelBuf):
 
         The colors may or may not be showing after this function returns because
         it may be done asynchronously."""
-        neopixel_write(self.pin, self.buf)
+        neopixel_write(self.pin, self._buf)
 
     def fill(self, color):
         """Colors all pixels the given ***color***."""
         _pixelbuf.fill(self, color)
+
+    @property
+    def buf(self):
+        """
+        Get or set the unadjusted buffer.
+        """
+        return self._rawbuf
+
+    @buf.setter
+    def buf(self, value):
+        """
+        Update the unadjusted buffer.
+        """
+        self._rawbuf[:] = value[:]
+        self.brightness = self.brightness
