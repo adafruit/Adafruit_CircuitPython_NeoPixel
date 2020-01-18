@@ -116,7 +116,7 @@ class NeoPixel(_pixelbuf.PixelBuf):
         self._rawbuf = bytearray(self.n * bpp)
         super().__init__(n, self._buf,
                          brightness=brightness,
-                         rawbuf=_rawbuf,
+                         rawbuf=self._rawbuf,
                          byteorder=pixel_order,
                          auto_write=auto_write)
 
