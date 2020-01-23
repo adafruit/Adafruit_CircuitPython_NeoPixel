@@ -1,2 +1,1 @@
 Adafruit-Blinka
-adafruit-circuitpython-pypixelbuf
