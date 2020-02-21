@@ -112,11 +112,7 @@ class NeoPixel(_pixelbuf.PixelBuf):
                     order[pixel_order] = order_chars[char_no]
                 pixel_order = ''.join(order)
 
-        super().__init__(n, bytearray(self.n * bpp),
-                         brightness=brightness,
-                         rawbuf=bytearray(self.n * bpp),
-                         byteorder=pixel_order,
-                         auto_write=auto_write)
+        super().__init__(n, brightness=brightness, byteorder=pixel_order, auto_write=auto_write)
 
         self.pin = digitalio.DigitalInOut(pin)
         self.pin.direction = digitalio.Direction.OUTPUT
@@ -142,14 +138,5 @@ class NeoPixel(_pixelbuf.PixelBuf):
              Use ``show`` instead. It matches Micro:Bit and Arduino APIs."""
         self.show()
 
-    def show(self):
-        """Shows the new colors on the pixels themselves if they haven't already
-        been autowritten.
-
-        The colors may or may not be showing after this function returns because
-        it may be done asynchronously."""
-        neopixel_write(self.pin, self.buf)
-
-    def fill(self, color):
-        """Colors all pixels the given ***color***."""
-        _pixelbuf.fill(self, color)
+    def _transmit(self, buffer):
+        neopixel_write(self.pin, buffer)
