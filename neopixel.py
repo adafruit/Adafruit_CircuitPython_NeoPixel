@@ -93,6 +93,18 @@ class NeoPixel(_pixelbuf.PixelBuf):
         with neopixel.NeoPixel(NEOPIXEL, 10) as pixels:
             pixels[::2] = [RED] * (len(pixels) // 2)
             time.sleep(2)
+
+    .. py:method:: NeoPixel.show()
+
+       Shows the new colors on the pixels themselves if they haven't already
+       been autowritten.
+
+      The colors may or may not be showing after this function returns because
+      it may be done asynchronously.
+
+    .. py:method:: NeoPixel.fill(color)
+
+       Colors all pixels the given ***color***.
     """
     bpp = None
     n = 0
