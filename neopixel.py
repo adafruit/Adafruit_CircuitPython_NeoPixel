@@ -105,6 +105,11 @@ class NeoPixel(_pixelbuf.PixelBuf):
     .. py:method:: NeoPixel.fill(color)
 
         Colors all pixels the given ***color***.
+
+    .. py:attribute:: brightness
+
+        Overall brightness of the pixel (0 to 1.0)
+
     """
     bpp = None
     n = 0
