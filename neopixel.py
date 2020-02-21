@@ -96,15 +96,15 @@ class NeoPixel(_pixelbuf.PixelBuf):
 
     .. py:method:: NeoPixel.show()
 
-       Shows the new colors on the pixels themselves if they haven't already
-       been autowritten.
+        Shows the new colors on the pixels themselves if they haven't already
+        been autowritten.
 
-      The colors may or may not be showing after this function returns because
-      it may be done asynchronously.
+        The colors may or may not be showing after this function returns because
+        it may be done asynchronously.
 
     .. py:method:: NeoPixel.fill(color)
 
-       Colors all pixels the given ***color***.
+        Colors all pixels the given ***color***.
     """
     bpp = None
     n = 0
