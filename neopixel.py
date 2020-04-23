@@ -30,12 +30,18 @@
 * Author(s): Damien P. George, Scott Shawcroft, Carter Nelson, Roy Hooper
 """
 
+# pylint: disable=ungrouped-imports
+import sys
 import digitalio
 from neopixel_write import neopixel_write
-try:
-    import _pixelbuf
-except ImportError:
+
+if sys.implementation.version[0] < 5:
     import adafruit_pypixelbuf as _pixelbuf
+else:
+    try:
+        import _pixelbuf
+    except ImportError:
+        import adafruit_pypixelbuf as _pixelbuf
 
 
 __version__ = "0.0.0-auto.0"
@@ -43,13 +49,13 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel.git"
 
 
 # Pixel color order constants
-RGB = 'RGB'
+RGB = "RGB"
 """Red Green Blue"""
-GRB = 'GRB'
+GRB = "GRB"
 """Green Red Blue"""
-RGBW = 'RGBW'
+RGBW = "RGBW"
 """Red Green Blue White"""
-GRBW = 'GRBW'
+GRBW = "GRBW"
 """Green Red Blue White"""
 
 
@@ -111,25 +117,20 @@ class NeoPixel(_pixelbuf.PixelBuf):
         Overall brightness of the pixel (0 to 1.0)
 
     """
-    bpp = None
-    n = 0
 
-    def __init__(self, pin, n, *, bpp=3, brightness=1.0, auto_write=True, pixel_order=None):
-        self.bpp = bpp
-        self.n = n
-
+    def __init__(
+        self, pin, n, *, bpp=3, brightness=1.0, auto_write=True, pixel_order=None
+    ):
         if not pixel_order:
             pixel_order = GRB if bpp == 3 else GRBW
         else:
-            self.bpp = bpp = len(pixel_order)
             if isinstance(pixel_order, tuple):
-                order_chars = RGBW
-                order = []
-                for char_no, order in enumerate(pixel_order):
-                    order[pixel_order] = order_chars[char_no]
-                pixel_order = ''.join(order)
+                order_list = [RGBW[order] for order in pixel_order]
+                pixel_order = "".join(order_list)
 
-        super().__init__(n, brightness=brightness, byteorder=pixel_order, auto_write=auto_write)
+        super().__init__(
+            n, brightness=brightness, byteorder=pixel_order, auto_write=auto_write
+        )
 
         self.pin = digitalio.DigitalInOut(pin)
         self.pin.direction = digitalio.Direction.OUTPUT
@@ -148,6 +149,13 @@ class NeoPixel(_pixelbuf.PixelBuf):
 
     def __repr__(self):
         return "[" + ", ".join([str(x) for x in self]) + "]"
+
+    @property
+    def n(self):
+        """
+        The number of neopixels in the chain (read-only)
+        """
+        return len(self)
 
     def write(self):
         """.. deprecated: 1.0.0
