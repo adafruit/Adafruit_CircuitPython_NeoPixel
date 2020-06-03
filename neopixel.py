@@ -127,13 +127,13 @@ class NeoPixel(_pixelbuf.PixelBuf):
             if isinstance(pixel_order, tuple):
                 order_list = [RGBW[order] for order in pixel_order]
                 pixel_order = "".join(order_list)
+        
+        self.pin = digitalio.DigitalInOut(pin)
+        self.pin.direction = digitalio.Direction.OUTPUT
 
         super().__init__(
             n, brightness=brightness, byteorder=pixel_order, auto_write=auto_write
         )
-
-        self.pin = digitalio.DigitalInOut(pin)
-        self.pin.direction = digitalio.Direction.OUTPUT
 
     def deinit(self):
         """Blank out the NeoPixels and release the pin."""
