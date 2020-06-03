@@ -127,7 +127,7 @@ class NeoPixel(_pixelbuf.PixelBuf):
             if isinstance(pixel_order, tuple):
                 order_list = [RGBW[order] for order in pixel_order]
                 pixel_order = "".join(order_list)
-        
+
         self.pin = digitalio.DigitalInOut(pin)
         self.pin.direction = digitalio.Direction.OUTPUT
 
