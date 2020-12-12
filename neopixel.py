@@ -35,6 +35,12 @@ import sys
 import digitalio
 from neopixel_write import neopixel_write
 
+# If we can import the cleanup function we will use it
+try: 
+    from neopixel_write import neopixel_cleanup
+except ImportError:
+    pass
+
 if sys.implementation.version[0] < 5:
     import adafruit_pypixelbuf as _pixelbuf
 else:
@@ -140,6 +146,10 @@ class NeoPixel(_pixelbuf.PixelBuf):
         self.fill(0)
         self.show()
         self.pin.deinit()
+        try:
+            neopixel_cleanup()
+        except NameError:
+            pass
 
     def __enter__(self):
         return self
