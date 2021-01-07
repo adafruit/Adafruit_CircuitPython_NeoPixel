@@ -70,7 +70,7 @@ class NeoPixel(_pixelbuf.PixelBuf):
       brightness
     :param bool auto_write: True if the neopixels should immediately change when set. If False,
       `show` must be called explicitly.
-    :param str: Set the pixel color channel order. GRBW is set by default.
+    :param str pixel_order: Set the pixel color channel order. GRBW is set by default.
 
     Example for Circuit Playground Express:
 
