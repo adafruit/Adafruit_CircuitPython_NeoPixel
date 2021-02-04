@@ -1,2 +1,6 @@
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+#
+# SPDX-License-Identifier: Unlicense
+
 Adafruit-Blinka
 adafruit-circuitpython-pypixelbuf>=2.0.0
