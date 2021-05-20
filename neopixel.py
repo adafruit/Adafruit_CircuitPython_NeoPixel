@@ -13,6 +13,8 @@
 """
 
 # pylint: disable=ungrouped-imports
+import sys
+import board
 import digitalio
 from neopixel_write import neopixel_write
 
@@ -101,10 +103,22 @@ class NeoPixel(_pixelbuf.PixelBuf):
     ):
         if not pixel_order:
             pixel_order = GRB if bpp == 3 else GRBW
-        else:
-            if isinstance(pixel_order, tuple):
-                order_list = [RGBW[order] for order in pixel_order]
-                pixel_order = "".join(order_list)
+        elif isinstance(pixel_order, tuple):
+            order_list = [RGBW[order] for order in pixel_order]
+            pixel_order = "".join(order_list)
+
+        self._power = None
+        if (
+            sys.implementation.version[0] >= 7
+            and getattr(board, "NEOPIXEL", None) == pin
+        ):
+            power = getattr(board, "NEOPIXEL_POWER_INVERTED", None)
+            polarity = power is None
+            if not power:
+                power = getattr(board, "NEOPIXEL_POWER", None)
+            if power:
+                self._power = digitalio.DigitalInOut(power)
+                self._power.switch_to_output(value=polarity)
 
         super().__init__(
             n, brightness=brightness, byteorder=pixel_order, auto_write=auto_write
@@ -118,6 +132,8 @@ class NeoPixel(_pixelbuf.PixelBuf):
         self.fill(0)
         self.show()
         self.pin.deinit()
+        if self._power:
+            self._power.deinit()
 
     def __enter__(self):
         return self
