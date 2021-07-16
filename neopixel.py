@@ -19,9 +19,12 @@ import digitalio
 from neopixel_write import neopixel_write
 
 try:
-    import _pixelbuf
+    import adafruit_pixelbuf
 except ImportError:
-    import adafruit_pypixelbuf as _pixelbuf
+    try:
+        import _pixelbuf as adafruit_pixelbuf
+    except ImportError:
+        import adafruit_pypixelbuf as adafruit_pixelbuf
 
 
 __version__ = "0.0.0-auto.0"
@@ -39,7 +42,7 @@ GRBW = "GRBW"
 """Green Red Blue White"""
 
 
-class NeoPixel(_pixelbuf.PixelBuf):
+class NeoPixel(adafruit_pixelbuf.PixelBuf):
     """
     A sequence of neopixels.
 
