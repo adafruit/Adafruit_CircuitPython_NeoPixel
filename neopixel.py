@@ -120,8 +120,11 @@ class NeoPixel(adafruit_pixelbuf.PixelBuf):
             if not power:
                 power = getattr(board, "NEOPIXEL_POWER", None)
             if power:
-                self._power = digitalio.DigitalInOut(power)
-                self._power.switch_to_output(value=polarity)
+                try:
+                    self._power = digitalio.DigitalInOut(power)
+                    self._power.switch_to_output(value=polarity)
+                except ValueError:
+                    pass
 
         super().__init__(
             n, brightness=brightness, byteorder=pixel_order, auto_write=auto_write
