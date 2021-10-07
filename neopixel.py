@@ -27,6 +27,16 @@ except ImportError:
         import adafruit_pypixelbuf as adafruit_pixelbuf
 
 
+try:
+    from typing import Optional, Type
+    from types import TracebackType
+except ImportError:
+    pass
+
+
+import microcontroller
+
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel.git"
 
@@ -102,7 +112,14 @@ class NeoPixel(adafruit_pixelbuf.PixelBuf):
     """
 
     def __init__(
-        self, pin, n, *, bpp=3, brightness=1.0, auto_write=True, pixel_order=None
+        self,
+        pin: microcontroller.Pin,
+        n: int,
+        *,
+        bpp: int = 3,
+        brightness: float = 1.0,
+        auto_write: bool = True,
+        pixel_order: str = None
     ):
         if not pixel_order:
             pixel_order = GRB if bpp == 3 else GRBW
@@ -144,7 +161,12 @@ class NeoPixel(adafruit_pixelbuf.PixelBuf):
     def __enter__(self):
         return self
 
-    def __exit__(self, exception_type, exception_value, traceback):
+    def __exit__(
+        self,
+        exception_type: Optional[Type[BaseException]],
+        exception_value: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ):
         self.deinit()
 
     def __repr__(self):
@@ -163,5 +185,5 @@ class NeoPixel(adafruit_pixelbuf.PixelBuf):
         Use ``show`` instead. It matches Micro:Bit and Arduino APIs."""
         self.show()
 
-    def _transmit(self, buffer):
+    def _transmit(self, buffer: bytearray):
         neopixel_write(self.pin, buffer)
