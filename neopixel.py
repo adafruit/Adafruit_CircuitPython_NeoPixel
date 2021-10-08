@@ -28,13 +28,12 @@ except ImportError:
 
 
 try:
+    # Used only for typing
     from typing import Optional, Type
     from types import TracebackType
+    import microcontroller
 except ImportError:
     pass
-
-
-import microcontroller
 
 
 __version__ = "0.0.0-auto.0"
@@ -150,7 +149,7 @@ class NeoPixel(adafruit_pixelbuf.PixelBuf):
         self.pin = digitalio.DigitalInOut(pin)
         self.pin.direction = digitalio.Direction.OUTPUT
 
-    def deinit(self):
+    def deinit(self) -> None:
         """Blank out the NeoPixels and release the pin."""
         self.fill(0)
         self.show()
@@ -173,17 +172,17 @@ class NeoPixel(adafruit_pixelbuf.PixelBuf):
         return "[" + ", ".join([str(x) for x in self]) + "]"
 
     @property
-    def n(self):
+    def n(self) -> int:
         """
         The number of neopixels in the chain (read-only)
         """
         return len(self)
 
-    def write(self):
+    def write(self) -> None:
         """.. deprecated: 1.0.0
 
         Use ``show`` instead. It matches Micro:Bit and Arduino APIs."""
         self.show()
 
-    def _transmit(self, buffer: bytearray):
+    def _transmit(self, buffer: bytearray) -> None:
         neopixel_write(self.pin, buffer)
