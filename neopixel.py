@@ -27,6 +27,15 @@ except ImportError:
         import adafruit_pypixelbuf as adafruit_pixelbuf
 
 
+try:
+    # Used only for typing
+    from typing import Optional, Type
+    from types import TracebackType
+    import microcontroller
+except ImportError:
+    pass
+
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel.git"
 
@@ -102,7 +111,14 @@ class NeoPixel(adafruit_pixelbuf.PixelBuf):
     """
 
     def __init__(
-        self, pin, n, *, bpp=3, brightness=1.0, auto_write=True, pixel_order=None
+        self,
+        pin: microcontroller.Pin,
+        n: int,
+        *,
+        bpp: int = 3,
+        brightness: float = 1.0,
+        auto_write: bool = True,
+        pixel_order: str = None
     ):
         if not pixel_order:
             pixel_order = GRB if bpp == 3 else GRBW
@@ -133,7 +149,7 @@ class NeoPixel(adafruit_pixelbuf.PixelBuf):
         self.pin = digitalio.DigitalInOut(pin)
         self.pin.direction = digitalio.Direction.OUTPUT
 
-    def deinit(self):
+    def deinit(self) -> None:
         """Blank out the NeoPixels and release the pin."""
         self.fill(0)
         self.show()
@@ -144,24 +160,29 @@ class NeoPixel(adafruit_pixelbuf.PixelBuf):
     def __enter__(self):
         return self
 
-    def __exit__(self, exception_type, exception_value, traceback):
+    def __exit__(
+        self,
+        exception_type: Optional[Type[BaseException]],
+        exception_value: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ):
         self.deinit()
 
     def __repr__(self):
         return "[" + ", ".join([str(x) for x in self]) + "]"
 
     @property
-    def n(self):
+    def n(self) -> int:
         """
         The number of neopixels in the chain (read-only)
         """
         return len(self)
 
-    def write(self):
+    def write(self) -> None:
         """.. deprecated: 1.0.0
 
         Use ``show`` instead. It matches Micro:Bit and Arduino APIs."""
         self.show()
 
-    def _transmit(self, buffer):
+    def _transmit(self, buffer: bytearray) -> None:
         neopixel_write(self.pin, buffer)
