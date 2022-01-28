@@ -106,6 +106,13 @@ need to be specified as it is computed from the supplied ``pixel_order``.
     pixel = neopixel.NeoPixel(board.D0, 1, pixel_order=neopixel.RGBW)
     pixel[0] = (30, 0, 20, 10)
 
+Documentation
+=============
+
+API documentation for this library can be found on `Read the Docs <https://docs.circuitpython.org/projects/neopixel/en/latest/>`_.
+
+For information on building library documentation, please check out `this guide <https://learn.adafruit.com/creating-and-sharing-a-circuitpython-library/sharing-our-docs-on-readthedocs#sphinx-5-1>`_.
+
 
 Contributing
 ============
@@ -113,8 +120,3 @@ Contributing
 Contributions are welcome! Please read our `Code of Conduct
 <https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel/blob/main/CODE_OF_CONDUCT.md>`_
 before contributing to help this project stay welcoming.
-
-Documentation
-=============
-
-For information on building library documentation, please check out `this guide <https://learn.adafruit.com/creating-and-sharing-a-circuitpython-library/sharing-our-docs-on-readthedocs#sphinx-5-1>`_.
