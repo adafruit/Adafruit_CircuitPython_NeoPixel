@@ -12,20 +12,12 @@
 * Author(s): Damien P. George, Scott Shawcroft, Carter Nelson, Rose Hooper
 """
 
-# pylint: disable=ungrouped-imports
 import sys
 import board
 import digitalio
 from neopixel_write import neopixel_write
 
-try:
-    import adafruit_pixelbuf
-except ImportError:
-    try:
-        import _pixelbuf as adafruit_pixelbuf
-    except ImportError:
-        import adafruit_pypixelbuf as adafruit_pixelbuf
-
+import adafruit_pixelbuf
 
 try:
     # Used only for typing
