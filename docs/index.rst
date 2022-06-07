@@ -31,7 +31,8 @@ Table of Contents
 .. toctree::
     :caption: Other Links
 
-    Download <https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel/releases/latest>
+    Download from GitHub <https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel/releases/latest>
+    Download Library Bundle <https://circuitpython.org/libraries>
     Adafruit NeoPixel Uberguide <https://learn.adafruit.com/adafruit-neopixel-uberguide>
     CircuitPython Reference Documentation <https://docs.circuitpython.org>
     CircuitPython Support Forum <https://forums.adafruit.com/viewforum.php?f=60>
