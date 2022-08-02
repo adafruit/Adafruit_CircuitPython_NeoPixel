@@ -14,6 +14,10 @@ Adafruit CircuitPython NeoPixel
     :target: https://github.com/adafruit/Adafruit_CircuitPython_NeoPixel/actions/
     :alt: Build Status
 
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/psf/black
+    :alt: Code Style: Black
+
 Higher level NeoPixel driver that presents the strip as a sequence. This is a
 supercharged version of the original MicroPython driver. Its now more like a
 normal Python sequence and features slice support, ``repr`` and ``len`` support.
