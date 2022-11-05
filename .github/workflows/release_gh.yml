@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2017 Scott Shawcroft, written for Adafruit Industries
+#
+# SPDX-License-Identifier: MIT
+
+name: GitHub Release Actions
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  upload-release-assets:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run GitHub Release CI workflow
+      uses: adafruit/workflows-circuitpython-libs/release-gh@main
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
