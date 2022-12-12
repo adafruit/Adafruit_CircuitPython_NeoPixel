@@ -115,13 +115,12 @@ Setup for sudo-less usage on Raspberry Pi boards
 1. Enable both SPI and Serial port hardware (Serial interface). Do it by ``raspi-config`` tool or manually by adding
 
    ::
-   
       dtparam=spi=on
       enable_uart=1
 
    to the ``/boot/config.txt``
 
-2. Reboot the Pi to apply the changes - the hardware setup takes place during boot. 
+2. Reboot the Pi to apply the changes - the hardware setup takes place during boot.
 3. Connect LED's DIN to ``GPIO10`` (physical pin 19)
 
 When initializing the ``NeoPixel`` object **always** do it with ``board.D10`` (GPIO10)
