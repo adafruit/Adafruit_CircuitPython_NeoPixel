@@ -111,7 +111,7 @@ need to be specified as it is computed from the supplied ``pixel_order``.
     pixel[0] = (30, 0, 20, 10)
 
 Setup for sudo-less usage on Raspberry Pi boards
-=============
+================================================
 1. Enable both SPI and Serial port hardware (Serial interface). Do it by ``raspi-config`` tool or manually by adding
 
    ::
