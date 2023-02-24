@@ -115,7 +115,7 @@ Setup for sudo-less usage on Raspberry Pi boards
 1. Enable both SPI and Serial port hardware (Serial interface). Do it by ``raspi-config`` tool or manually by adding
 
    ::
-   
+
       dtparam=spi=on
       enable_uart=1
 
