@@ -103,7 +103,7 @@ class NeoPixel(adafruit_pixelbuf.PixelBuf):
 
     """
 
-    def __init__(
+    def __init__(  # noqa: PLR0913 Too many arguments in function definition
         self,
         pin: microcontroller.Pin,
         n: int,
