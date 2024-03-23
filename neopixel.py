@@ -110,7 +110,7 @@ class NeoPixel(adafruit_pixelbuf.PixelBuf):
         bpp: int = 3,
         brightness: float = 1.0,
         auto_write: bool = True,
-        pixel_order: str = None
+        pixel_order: str = None,
     ):
         if not pixel_order:
             pixel_order = GRB if bpp == 3 else GRBW
