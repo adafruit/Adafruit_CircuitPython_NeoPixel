@@ -13,16 +13,17 @@
 """
 
 import sys
+
+import adafruit_pixelbuf
 import board
 import digitalio
 from neopixel_write import neopixel_write
 
-import adafruit_pixelbuf
-
 try:
     # Used only for typing
-    from typing import Optional, Type
     from types import TracebackType
+    from typing import Optional, Type
+
     import microcontroller
 except ImportError:
     pass

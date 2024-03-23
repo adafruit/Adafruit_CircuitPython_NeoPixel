@@ -42,6 +42,9 @@ dynamic = ["dependencies", "optional-dependencies"]
 [tool.ruff]
 target-version = "py38"
 
+[tool.ruff.lint]
+select = ["I"]
+
 [tool.ruff.format]
 line-ending = "lf"
 

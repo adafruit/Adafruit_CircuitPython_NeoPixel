@@ -2,8 +2,10 @@
 # SPDX-License-Identifier: MIT
 
 import time
+
 import board
 from rainbowio import colorwheel
+
 import neopixel
 
 NUMPIXELS = 12  # Update this to match the number of LEDs.

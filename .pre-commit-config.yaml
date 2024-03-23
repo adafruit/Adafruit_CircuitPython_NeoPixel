@@ -13,6 +13,8 @@ repos:
     rev: v0.3.4
     hooks:
       - id: ruff-format
+      - id: ruff
+        args: ["--fix"]
   - repo: https://github.com/fsfe/reuse-tool
     rev: v3.0.1
     hooks:
