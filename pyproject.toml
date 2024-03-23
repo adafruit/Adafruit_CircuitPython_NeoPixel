@@ -44,7 +44,7 @@ target-version = "py38"
 
 [tool.ruff.lint]
 select = ["I", "PL", "UP"]
-ignore = ["PLR2004", "UP028", "UP030", "UP031", "UP032"]
+ignore = ["PLR2004", "UP030", "UP031", "UP032"]
 
 [tool.ruff.format]
 line-ending = "lf"
