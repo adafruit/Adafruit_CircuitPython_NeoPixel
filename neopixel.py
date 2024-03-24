@@ -13,16 +13,17 @@
 """
 
 import sys
+
+import adafruit_pixelbuf
 import board
 import digitalio
 from neopixel_write import neopixel_write
 
-import adafruit_pixelbuf
-
 try:
     # Used only for typing
-    from typing import Optional, Type
     from types import TracebackType
+    from typing import Optional, Type
+
     import microcontroller
 except ImportError:
     pass
@@ -102,7 +103,7 @@ class NeoPixel(adafruit_pixelbuf.PixelBuf):
 
     """
 
-    def __init__(
+    def __init__(  # noqa: PLR0913 Too many arguments in function definition
         self,
         pin: microcontroller.Pin,
         n: int,
@@ -110,7 +111,7 @@ class NeoPixel(adafruit_pixelbuf.PixelBuf):
         bpp: int = 3,
         brightness: float = 1.0,
         auto_write: bool = True,
-        pixel_order: str = None
+        pixel_order: str = None,
     ):
         if not pixel_order:
             pixel_order = GRB if bpp == 3 else GRBW
