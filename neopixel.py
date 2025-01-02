@@ -54,7 +54,8 @@ class NeoPixel(adafruit_pixelbuf.PixelBuf):
       brightness
     :param bool auto_write: True if the neopixels should immediately change when set. If False,
       `show` must be called explicitly.
-    :param str pixel_order: Set the pixel color channel order. GRBW is set by default.
+    :param str pixel_order: Set the pixel color channel order. The default is GRB if bpp is set
+      to 3, otherwise GRBW is used as the default.
 
     Example for Circuit Playground Express:
 
