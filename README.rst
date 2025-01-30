@@ -38,6 +38,7 @@ Dependencies
 This driver depends on:
 
 * `Adafruit CircuitPython <https://github.com/adafruit/circuitpython>`_
+* `Adafruit CircuitPython Pixelbuf library <https://github.com/adafruit/Adafruit_CircuitPython_Pixelbuf>`_
 
 Please ensure all dependencies are available on the CircuitPython filesystem.
 This is easily achieved by downloading
