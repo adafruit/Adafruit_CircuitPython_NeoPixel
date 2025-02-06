@@ -5,9 +5,10 @@
 # Most NeoPixels = neopixel.GRB or neopixel.GRBW
 # The 8mm Diffused NeoPixel (PID 1734) = neopixel.RGB
 import time
+from math import ceil
 import board
 import neopixel
-from math import ceil
+
 
 # Configure the setup
 PIXEL_PIN = board.A3  # pin that the NeoPixel is connected to
