@@ -30,8 +30,8 @@ Rainbow
 
 Example of cycling through the colors of the rainbow.
 
-.. literalinclude:: ../examples/neopixel_rainbow_simpletest.py
-    :caption: examples/neopixel_rainbow_simpletest.py
+.. literalinclude:: ../examples/neopixel_rainbowio_simpletest.py
+    :caption: examples/neopixel_rainbowio_simpletest.py
     :linenos:
 
 Bouncing ball
