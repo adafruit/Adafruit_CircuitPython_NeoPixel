@@ -2,8 +2,10 @@
 # SPDX-License-Identifier: MIT
 
 import time
+
 import board
 from rainbowio import colorwheel
+
 import neopixel
 
 NUMPIXELS = 12  # Update this to match the number of LEDs.
@@ -16,7 +18,7 @@ pixels = neopixel.NeoPixel(PIN, NUMPIXELS, brightness=BRIGHTNESS, auto_write=Fal
 
 def rainbow_cycle(wait):
     for color in range(255):
-        for pixel in range(len(pixels)):  # pylint: disable=consider-using-enumerate
+        for pixel in range(len(pixels)):
             pixel_index = (pixel * 256 // len(pixels)) + color * 5
             pixels[pixel] = colorwheel(pixel_index & 255)
         pixels.show()

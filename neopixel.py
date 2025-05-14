@@ -13,16 +13,17 @@
 """
 
 import sys
+
+import adafruit_pixelbuf
 import board
 import digitalio
 from neopixel_write import neopixel_write
 
-import adafruit_pixelbuf
-
 try:
     # Used only for typing
-    from typing import Optional, Type
     from types import TracebackType
+    from typing import Optional, Type
+
     import microcontroller
 except ImportError:
     pass
@@ -111,7 +112,7 @@ class NeoPixel(adafruit_pixelbuf.PixelBuf):
         bpp: int = 3,
         brightness: float = 1.0,
         auto_write: bool = True,
-        pixel_order: str = None
+        pixel_order: str = None,
     ):
         if not pixel_order:
             pixel_order = GRB if bpp == 3 else GRBW
@@ -120,10 +121,7 @@ class NeoPixel(adafruit_pixelbuf.PixelBuf):
             pixel_order = "".join(order_list)
 
         self._power = None
-        if (
-            sys.implementation.version[0] >= 7
-            and getattr(board, "NEOPIXEL", None) == pin
-        ):
+        if sys.implementation.version[0] >= 7 and getattr(board, "NEOPIXEL", None) == pin:
             power = getattr(board, "NEOPIXEL_POWER_INVERTED", None)
             polarity = power is None
             if not power:
@@ -135,9 +133,7 @@ class NeoPixel(adafruit_pixelbuf.PixelBuf):
                 except ValueError:
                     pass
 
-        super().__init__(
-            n, brightness=brightness, byteorder=pixel_order, auto_write=auto_write
-        )
+        super().__init__(n, brightness=brightness, byteorder=pixel_order, auto_write=auto_write)
 
         self.pin = digitalio.DigitalInOut(pin)
         self.pin.direction = digitalio.Direction.OUTPUT
