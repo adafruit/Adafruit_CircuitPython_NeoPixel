@@ -6,7 +6,9 @@
 # Most NeoPixels = neopixel.GRB or neopixel.GRBW
 # The 8mm Diffused NeoPixel (PID 1734) = neopixel.RGB
 import time
+
 import board
+
 import neopixel
 
 # Configure the setup
