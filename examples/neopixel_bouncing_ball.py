@@ -50,7 +50,7 @@ while True:
 
     # Check if the ball is at the bottom to break the loop
     if top == num_pixels - 1:
-        floor_count = floor_count + 1
+        floor_count += 1
     if floor_count == 3:
         break
 
